@@ -1,0 +1,13 @@
+var cool_int = 1;
+
+var function = (var param1, var param2) {
+
+};
+
+var function2 = {
+  var wow;
+
+  var function3 = (var param1) {
+    var wow_again = 1;
+  };
+};
