@@ -7,25 +7,64 @@ grammar Myth;
 program     : procedure EOF
             ;
 
-procedure   : (stmt)*
+procedure   : (stmt SEMI)*
             ;
 
-stmt        : decl SEMI
-            | declAssign SEMI
+stmt        : decl          # StmtDecl
+            | declAssign    # StmtDecl
+            | expr          # StmtExpr
+            | RETURN expr   # StmtReturnExpr
+            | RETURN        # StmtReturn
             ;
 
 declAssign  : decl EQUAL expr
             ;
 
-decl        : type IDENT
+decl        : varMode IDENT ':' className
+            | varMode IDENT
             ;
 
-expr        : LIT_INT
-            | function
+className   : IDENT
+            | IDENT '<' classList '>'
             ;
 
-function    : params '{' procedure '}'
-            | '{' procedure '}'
+classList   : className
+            | className ',' classList
+            ;
+
+expr        : MINUS expr                    # ExprMinus
+            | expr (TIMES | DIVIDE) expr    # ExprArith
+            | expr (PLUS | MINUS) expr      # ExprArith
+            | '(' expr ')'                  # ExprParen
+            | term                          # ExprTerm
+            | ref EQUAL expr                # ExprAssign
+            | funcDefn                      # ExprFuncDefn
+            | classDefn                     # ExprClassDefn
+            ;
+
+term        : LIT_INT
+            | TRUE
+            | FALSE
+            | ref
+            | funcCall
+            ;
+
+ref         : IDENT
+            ;
+
+exprList    : expr
+            | expr ',' exprList
+            ;
+
+funcCall    : IDENT args
+            ;
+
+args        : '()'
+            | '(' exprList ')'
+            ;
+
+funcDefn    : params ':' className '{' procedure '}'
+            | ':' className '{' procedure '}'
             ;
 
 params      : '(' paramList ')'
@@ -33,10 +72,24 @@ params      : '(' paramList ')'
             ;
 
 paramList   : decl
+            | declAssign
             | decl ',' paramList
+            | declAssign ',' paramList
             ;
 
-type        : VAR
+classDefn   : CLASS '{' classDecls '}'
+            | CLASS ':' classList '{' classDecls '}'
+            ;
+
+classDecl   : declAssign SEMI
+            | decl SEMI
+            ;
+
+classDecls  : classDecl classDecls
+            | classDecl
+            ;
+
+varMode     : VAR
             | VAL
             ;
 
@@ -47,13 +100,22 @@ type        : VAR
 
 // Literals
 LIT_INT     : (DIGIT)+;
+TRUE        : 'true';
+FALSE       : 'false';
+CLASS       : 'class';
 
 // Keywords
 VAR         : 'var';
 VAL         : 'val';
+RETURN      : 'ret';
 
 // Symbols
 EQUAL       : '=';
+PLUS        : '+';
+MINUS       : '-';
+TIMES       : '*';
+DIVIDE      : '/';
+
 
 // Identifiers start with a character, may have digits
 
@@ -62,4 +124,6 @@ SEMI        : ';';
 
 // Basics
 DIGIT       : [0-9]+;
-WS          : [ \t\r\n]+ -> skip;
+COMMENT     : '//'~[\r\n]* -> skip;
+BLOCK_COM   : '/*'.*'*/' -> skip;
+WS          : [ \t\r\n]+ -> channel(HIDDEN);

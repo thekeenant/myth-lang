@@ -16,7 +16,7 @@ var function = (var param1, var param2) {
 
 };
 
-# Optional param declaration
+// Optional param declaration
 var function2 = {
   var wow;
 

@@ -1,13 +1,6 @@
-var cool_int = 1;
+var x = (1 + 2) * 5;
+var y = true;
 
-var function = (var param1, var param2) {
-
-};
-
-var function2 = {
-  var wow;
-
-  var function3 = (var param1) {
-    var wow_again = 1;
-  };
+var func = (val x : Integer) : Integer {
+  var y = true;
 };

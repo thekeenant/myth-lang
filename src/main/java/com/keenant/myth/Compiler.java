@@ -1,17 +1,32 @@
 package com.keenant.myth;
 
-public class Compiler implements Runnable {
-    private final String source;
-    private final String target;
+import com.keenant.myth.lang.Program;
+import com.keenant.myth.parsing.Parser;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 
-    public Compiler(String source, String target) {
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class Compiler {
+    private final InputStream source;
+    private final OutputStream target;
+
+    public Compiler(InputStream source, OutputStream target) {
         this.source = source;
         this.target = target;
-
     }
 
-    @Override
-    public void run() {
-//        CharStream stream = CharStreams.fromFileName(source);
+    public void compile() throws Exception {
+        CharStream stream = CharStreams.fromStream(source);
+
+        Parser parser = new Parser(stream);
+
+        Program program = parser.parse();
+
+        System.out.println("Parsed program:");
+        System.out.println(program);
+
+        program.typeCheck();
     }
 }
