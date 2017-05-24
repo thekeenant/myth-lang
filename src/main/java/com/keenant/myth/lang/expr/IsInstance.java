@@ -1,26 +1,23 @@
-package com.keenant.myth.lang.expr.term;
+package com.keenant.myth.lang.expr;
 
 import com.keenant.myth.exception.TypeCheckException;
 import com.keenant.myth.lang.ClassName;
 import com.keenant.myth.lang.Scope;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-public class LiteralBool extends Term {
-    private final boolean value;
+public class IsInstance extends Expr {
+    private final Expr lhs;
+    private final ClassName rhs;
 
-    public LiteralBool(ParserRuleContext context, boolean value) {
+    public IsInstance(ParserRuleContext context, Expr lhs, ClassName rhs) {
         super(context);
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+        this.lhs = lhs;
+        this.rhs = rhs;
     }
 
     @Override
     public void typeCheck(Scope scope) throws TypeCheckException {
-        // Nothing to do
+        lhs.typeCheck(scope);
     }
 
     @Override

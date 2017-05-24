@@ -1,6 +1,5 @@
-package com.keenant.myth.lang.expr.term;
+package com.keenant.myth.lang.expr;
 
-import com.keenant.myth.exception.BadReferenceException;
 import com.keenant.myth.exception.TypeCheckException;
 import com.keenant.myth.lang.ClassName;
 import com.keenant.myth.lang.Scope;
@@ -8,28 +7,30 @@ import com.keenant.myth.lang.stmt.Decl;
 import lombok.ToString;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-@ToString
-public class Ref extends Term {
-    private final String ident;
+import java.util.List;
 
-    public Ref(ParserRuleContext context, String ident) {
+@ToString
+public class ClassDefn extends Expr {
+    private final String ident;
+    private final List<Decl> list;
+
+    public ClassDefn(ParserRuleContext context, String ident, List<Decl> list) {
         super(context);
         this.ident = ident;
+        this.list = list;
     }
 
     @Override
     public void typeCheck(Scope scope) throws TypeCheckException {
+        Scope nested = new Scope(scope);
 
+        for (Decl decl : list) {
+            decl.typeCheck(nested);
+        }
     }
 
     @Override
     public ClassName resolveType(Scope scope) throws TypeCheckException {
-        Decl decl = scope.findDeclGlobal(ident).orElse(null);
-
-        if (decl == null) {
-            throw new BadReferenceException(this, "reference to unknown variable");
-        }
-
-        return decl.resolveType(scope);
+        return new ClassName(ident);
     }
 }

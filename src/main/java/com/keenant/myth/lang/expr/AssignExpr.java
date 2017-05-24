@@ -32,7 +32,7 @@ public class AssignExpr extends Expr {
         ClassName refType = ref.resolveType(scope);
         ClassName exprType = expr.resolveType(scope);
 
-        if (!Objects.equals(refType, exprType)) {
+        if (!exprType.isSubTypeOf(refType)) {
             throw new TypeCheckException(this, "incompatible types, ref is " + refType + " but expr is " + exprType);
         }
 

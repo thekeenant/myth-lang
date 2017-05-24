@@ -18,6 +18,6 @@ public class Procedure extends Node {
     }
 
     public void typeCheck(Scope scope, ClassName returnType) {
-        statements.forEach(stmt -> stmt.typeCheck(scope));
+        statements.forEach(stmt -> stmt.typeCheck(scope, returnType));
     }
 }

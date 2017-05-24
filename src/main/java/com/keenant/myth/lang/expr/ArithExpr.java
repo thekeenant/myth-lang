@@ -32,7 +32,7 @@ public class ArithExpr extends Expr {
         ClassName lhsType = lhs.resolveType(scope);
         ClassName rhsType = rhs.resolveType(scope);
         // Todo: ensure the type supports arithmetic
-        if (!Objects.equals(lhsType, rhsType))
+        if (!rhsType.isSubTypeOf(lhsType))
             throw new TypeCheckException(this, "arithmetic expression with different types");
         return lhsType;
     }

@@ -8,20 +8,41 @@ which would run on the JVM.
 Here is what it looks like so far:
 
 ```text
-// No types yet
-var cool_int = 1;
+// inferred variable types
+var x = 0;    // Int
+var y = true; // Bool
 
-// Explicit parameters
-var function = (var param1, var param2) {
+// explicit type
+var z : Int;
 
-};
+// this is illegal, because variables need types
+// var x;
 
-// Optional param declaration
-var function2 = {
-  var wow;
+// also illegal, "what did the boolean say to the integer? you're not my type"
+// var x : Bool = 5;
 
-  var function3 = (var param1) {
-    var wow_again = 1;
+class Animal {
+  var living = true;
+  var running = false;
+  
+  // abstract method, one default param
+  var speak = (var toWhom = null);
+  
+  // no params, returns Bool
+  var toggleRun = () : Bool {
+    running = true;
+    return running;
   };
 };
+
+class Dog {
+  var Dog = (var name : String) {
+  
+  };
+
+  // inline function (no strings yet btw)
+  var speak = (var toWhom = null) -> print("Bark");
+};
+
+var dog = new Dog("Max");
 ```

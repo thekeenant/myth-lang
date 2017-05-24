@@ -1,7 +1,9 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.exception.BadDeclarationException;
 import com.keenant.myth.exception.TypeCheckException;
 import com.keenant.myth.lang.stmt.Decl;
+import com.keenant.myth.lang.stmt.DeclAssign;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import java.util.List;
@@ -15,7 +17,16 @@ public class Params extends Node {
     }
 
     public void typeCheck(Scope scope) throws TypeCheckException {
-        list.forEach(decl -> decl.typeCheck(scope));
+        boolean optional = false;
+        for (Decl decl : list) {
+            if (decl instanceof DeclAssign) {
+                optional = true;
+            }
+            else if (optional) {
+                throw new BadDeclarationException(this, "required params cannot follow optional params");
+            }
+            decl.typeCheck(scope);
+        }
     }
 
     @Override

@@ -33,6 +33,6 @@ public class FuncDefn extends Expr {
 
     @Override
     public ClassName resolveType(Scope scope) throws TypeCheckException {
-        return new ClassName("java.util.function.Function");
+        return new ClassName("Function");
     }
 }

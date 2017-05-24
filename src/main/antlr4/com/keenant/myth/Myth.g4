@@ -13,19 +13,19 @@ procedure   : (stmt SEMI)*
 stmt        : decl          # StmtDecl
             | declAssign    # StmtDecl
             | expr          # StmtExpr
-            | RETURN expr   # StmtReturnExpr
+            | RETURN expr   # StmtReturn
             | RETURN        # StmtReturn
             ;
 
 declAssign  : decl EQUAL expr
             ;
 
-decl        : varMode IDENT ':' className
+decl        : varMode IDENT COLON className
             | varMode IDENT
             ;
 
 className   : IDENT
-            | IDENT '<' classList '>'
+            | IDENT LANGLE classList RANGLE
             ;
 
 classList   : className
@@ -35,11 +35,13 @@ classList   : className
 expr        : MINUS expr                    # ExprMinus
             | expr (TIMES | DIVIDE) expr    # ExprArith
             | expr (PLUS | MINUS) expr      # ExprArith
-            | '(' expr ')'                  # ExprParen
+            | LPAREN expr RPAREN            # ExprParen
             | term                          # ExprTerm
             | ref EQUAL expr                # ExprAssign
             | funcDefn                      # ExprFuncDefn
             | classDefn                     # ExprClassDefn
+            | arrayDefn                     # ExprArrayDefn
+            | expr IS IDENT                 # ExprIsInstance
             ;
 
 term        : LIT_INT
@@ -47,46 +49,59 @@ term        : LIT_INT
             | FALSE
             | ref
             | funcCall
+            | new
+            ;
+
+new         : NEW funcCall
             ;
 
 ref         : IDENT
             ;
 
 exprList    : expr
-            | expr ',' exprList
+            | expr COMMA exprList
             ;
 
 funcCall    : IDENT args
             ;
 
-args        : '()'
-            | '(' exprList ')'
+args        : LPAREN RPAREN
+            | LPAREN exprList RPAREN
             ;
 
-funcDefn    : params ':' className '{' procedure '}'
-            | ':' className '{' procedure '}'
+arrayDefn   : LANGLE className RANGLE LSQUARE exprList RSQUARE
+            | LANGLE className RANGLE LSQUARE RSQUARE
             ;
 
-params      : '(' paramList ')'
-            | '()'
+funcDefn    : params COLON className LCURLY procedure RCURLY
+            | params LCURLY procedure RCURLY
+            | params COLON className ARROW expr
+            | params ARROW expr
+            | params
+            | params COLON className
+            ;
+
+params      : LPAREN paramList RPAREN
+            | LPAREN RPAREN
             ;
 
 paramList   : decl
             | declAssign
-            | decl ',' paramList
-            | declAssign ',' paramList
+            | decl COMMA paramList
+            | declAssign COMMA paramList
             ;
 
-classDefn   : CLASS '{' classDecls '}'
-            | CLASS ':' classList '{' classDecls '}'
+classDefn   : CLASS IDENT LCURLY classDecls RCURLY
+            | CLASS IDENT COLON classList LCURLY classDecls RCURLY
+            | CLASS IDENT LCURLY RCURLY
+            | CLASS IDENT COLON classList LCURLY RCURLY
             ;
 
-classDecl   : declAssign SEMI
-            | decl SEMI
+classDecls  : (classDecl SEMI)*
             ;
 
-classDecls  : classDecl classDecls
-            | classDecl
+classDecl   : decl
+            | declAssign
             ;
 
 varMode     : VAR
@@ -98,18 +113,33 @@ varMode     : VAR
 // Terminals
 //
 
-// Literals
+// Literals Todo: string literal
+LIT_STR     : '"' .* '"' -> skip;
 LIT_INT     : (DIGIT)+;
 TRUE        : 'true';
 FALSE       : 'false';
-CLASS       : 'class';
 
 // Keywords
+NEW         : 'new';
 VAR         : 'var';
 VAL         : 'val';
-RETURN      : 'ret';
+RETURN      : 'return';
+CLASS       : 'class';
+IS          : 'is';
 
 // Symbols
+PRIV       : '_';
+ARROW       : '->';
+LSQUARE     : '[';
+RSQUARE     : ']';
+COMMA       : ',';
+LANGLE      : '<';
+RANGLE      : '>';
+LCURLY      : '{';
+RCURLY      : '}';
+LPAREN      : '(';
+RPAREN      : ')';
+COLON       : ':';
 EQUAL       : '=';
 PLUS        : '+';
 MINUS       : '-';

@@ -25,6 +25,6 @@ public class LiteralInt extends Term {
 
     @Override
     public ClassName resolveType(Scope scope) throws TypeCheckException {
-        return new ClassName("java.lang.Integer");
+        return new ClassName("Int");
     }
 }

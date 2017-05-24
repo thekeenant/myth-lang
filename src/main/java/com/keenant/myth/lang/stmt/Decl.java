@@ -41,8 +41,7 @@ public class Decl extends Stmt {
         return declaredType;
     }
 
-    @Override
-    public void typeCheck(Scope scope) throws TypeCheckException {
+    public void typeCheck(Scope scope) {
         if (resolveType(scope) == null) {
             throw new BadDeclarationException(this, "type cannot be inferred");
         }
@@ -52,5 +51,10 @@ public class Decl extends Stmt {
         } catch (ScopeException e) {
             throw new BadDeclarationException(this, "name already in scope");
         }
+    }
+
+    @Override
+    public void typeCheck(Scope scope, ClassName returnType) throws TypeCheckException {
+        typeCheck(scope);
     }
 }

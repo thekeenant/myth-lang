@@ -1,6 +1,5 @@
-var x = (1 + 2) * 5;
-var y = true;
 
-var func = (val x : Integer) : Integer {
-  var y = true;
-};
+
+var arr = <Int>[1, 2, 3];
+var anInt = 1;
+var boolean = anInt is Integer;

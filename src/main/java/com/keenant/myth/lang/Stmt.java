@@ -8,5 +8,5 @@ public abstract class Stmt extends Node {
         super(context);
     }
 
-    public abstract void typeCheck(Scope scope) throws TypeCheckException;
+    public abstract void typeCheck(Scope scope, ClassName returnType) throws TypeCheckException;
 }
