@@ -1,6 +1,6 @@
 package com.keenant.myth;
 
-import com.keenant.myth.lang.ClassName;
+import com.keenant.myth.codegen.ClassName;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

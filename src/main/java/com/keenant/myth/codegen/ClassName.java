@@ -1,4 +1,4 @@
-package com.keenant.myth.lang;
+package com.keenant.myth.codegen;
 
 public class ClassName {
     public static final ClassName OBJECT = new ClassName("java.lang.Object", null);
@@ -13,6 +13,22 @@ public class ClassName {
     public ClassName(String name, ClassName parent) {
         this.name = name;
         this.parent = parent;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getInternalName() {
+        return name.replace(".", "/");
+    }
+
+    public ClassName getParent() {
+        return parent;
+    }
+
+    public String getDescriptor() {
+        return "L" + getInternalName() + ";";
     }
 
     public boolean isSubTypeOf(ClassName other) {

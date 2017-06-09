@@ -46,3 +46,6 @@ class Dog {
 
 var dog = new Dog("Max");
 ```
+
+References:
+* https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html

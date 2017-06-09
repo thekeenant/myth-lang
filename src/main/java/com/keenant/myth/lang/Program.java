@@ -1,23 +1,29 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.codegen.Scope;
 import com.keenant.myth.exception.TypeCheckException;
 import lombok.ToString;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 @ToString
 public class Program extends Node {
-    private final Procedure procedure;
+    private final ClassDefinition def;
 
-    public Program(ParserRuleContext context, Procedure procedure) {
-        super(context);
-        this.procedure = procedure;
+    public Program(ParserRuleContext context, ClassDefinition def) {
+        super(context, null);
+        this.def = def;
+    }
+
+    @Override
+    public Scope getScope() {
+        return def.getScope();
     }
 
     public void typeCheck() throws TypeCheckException {
-        // Todo: this should be somewhere else
-        Metadata data = new Metadata("Main", "java.lang.Object");
-        Scope scope = new Scope(data);
+        def.typeCheck();
+    }
 
-        procedure.typeCheck(scope, null);
+    public void generate() {
+        def.generate();
     }
 }

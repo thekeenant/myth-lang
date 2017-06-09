@@ -4,7 +4,7 @@ grammar Myth;
 // Non-Terminals
 //
 
-program     : procedure EOF
+program     : classDef EOF
             ;
 
 procedure   : (stmt SEMI)*
@@ -18,13 +18,14 @@ stmt        : decl          # StmtDecl
             ;
 
 declAssign  : decl EQUAL expr
+            | decl EQUAL funcDef
             ;
 
 decl        : varMode IDENT COLON className
             | varMode IDENT
             ;
 
-className   : IDENT
+className   : IDENT ('.' IDENT)*
             | IDENT LANGLE classList RANGLE
             ;
 
@@ -38,9 +39,7 @@ expr        : MINUS expr                    # ExprMinus
             | LPAREN expr RPAREN            # ExprParen
             | term                          # ExprTerm
             | ref EQUAL expr                # ExprAssign
-            | funcDefn                      # ExprFuncDefn
-            | classDefn                     # ExprClassDefn
-            | arrayDefn                     # ExprArrayDefn
+            | arrayDef                      # ExprArrayDef
             | expr IS IDENT                 # ExprIsInstance
             ;
 
@@ -49,10 +48,10 @@ term        : LIT_INT
             | FALSE
             | ref
             | funcCall
-            | new
+            | newObject
             ;
 
-new         : NEW funcCall
+newObject   : NEW funcCall
             ;
 
 ref         : IDENT
@@ -69,11 +68,11 @@ args        : LPAREN RPAREN
             | LPAREN exprList RPAREN
             ;
 
-arrayDefn   : LANGLE className RANGLE LSQUARE exprList RSQUARE
+arrayDef    : LANGLE className RANGLE LSQUARE exprList RSQUARE
             | LANGLE className RANGLE LSQUARE RSQUARE
             ;
 
-funcDefn    : params COLON className LCURLY procedure RCURLY
+funcDef     : params COLON className LCURLY procedure RCURLY
             | params LCURLY procedure RCURLY
             | params COLON className ARROW expr
             | params ARROW expr
@@ -91,7 +90,7 @@ paramList   : decl
             | declAssign COMMA paramList
             ;
 
-classDefn   : CLASS IDENT LCURLY classDecls RCURLY
+classDef    : CLASS IDENT LCURLY classDecls RCURLY
             | CLASS IDENT COLON classList LCURLY classDecls RCURLY
             | CLASS IDENT LCURLY RCURLY
             | CLASS IDENT COLON classList LCURLY RCURLY

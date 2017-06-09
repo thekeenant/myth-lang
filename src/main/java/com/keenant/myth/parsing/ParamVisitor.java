@@ -3,31 +3,41 @@ package com.keenant.myth.parsing;
 import com.keenant.myth.MythBaseVisitor;
 import com.keenant.myth.MythParser.ParamListContext;
 import com.keenant.myth.MythParser.ParamsContext;
+import com.keenant.myth.codegen.Scope;
 import com.keenant.myth.lang.Params;
-import com.keenant.myth.lang.stmt.Decl;
+import com.keenant.myth.lang.stmt.DeclareStmt;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ParamVisitor extends MythBaseVisitor<Params> {
+    private final Scope scope;
+
+    public ParamVisitor(Scope scope) {
+        this.scope = scope;
+    }
+
     @Override
     public Params visitParams(ParamsContext ctx) {
-        List<Decl> result = new ArrayList<>();
+        List<DeclareStmt> result = new ArrayList<>();
         if (ctx.paramList() != null) {
             buildList(result, ctx.paramList());
         }
-        return new Params(ctx, result);
+        return new Params(ctx, scope, result);
     }
 
     @Override
     public Params visitParamList(ParamListContext ctx) {
-        List<Decl> result = new ArrayList<>();
+        List<DeclareStmt> result = new ArrayList<>();
         buildList(result, ctx);
-        return new Params(ctx, result);
+
+
+
+        return new Params(ctx, scope, result);
     }
 
-    private void buildList(List<Decl> list, ParamListContext ctx) {
-        DeclVisitor visitor = new DeclVisitor();
+    private void buildList(List<DeclareStmt> list, ParamListContext ctx) {
+        DeclVisitor visitor = new DeclVisitor(scope);
 
         if (ctx.decl() != null)
             list.add(ctx.decl().accept(visitor));
