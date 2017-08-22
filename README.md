@@ -7,7 +7,7 @@ which would run on the JVM.
 
 Here is what it looks like so far:
 
-```text
+```javascript
 // inferred variable types
 var x = 0;    // Int
 var y = true; // Bool
