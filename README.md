@@ -26,7 +26,7 @@ class Animal {
   var running = false;
   
   // abstract method, one default param
-  var speak = (var toWhom = null);
+  var speak = (var toWhom = "Bob");
   
   // no params, returns Bool
   var toggleRun = () : Bool {
@@ -40,8 +40,8 @@ class Dog {
   
   };
 
-  // inline function (no strings yet btw)
-  var speak = (var toWhom = null) -> print("Bark");
+  // inline function (no strings yet)
+  var speak = (var toWhom = "Bob") -> print("Bark");
 };
 
 var dog = new Dog("Max");
