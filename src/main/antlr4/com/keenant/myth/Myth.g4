@@ -10,7 +10,7 @@ program     : classDef EOF
 procedure   : (stmt SEMI)*
             ;
 
-stmt        : decl          # StmtDecl
+stmt        : typedDecl     # StmtDecl
             | declAssign    # StmtDecl
             | expr          # StmtExpr
             | RETURN expr   # StmtReturn
@@ -21,8 +21,10 @@ declAssign  : decl EQUAL expr
             | decl EQUAL funcDef
             ;
 
-decl        : varMode IDENT COLON className
-            | varMode IDENT
+typedDecl   : decl COLON className
+            ;
+
+decl        : varMode IDENT
             ;
 
 className   : IDENT ('.' IDENT)*
@@ -84,10 +86,8 @@ params      : LPAREN paramList RPAREN
             | LPAREN RPAREN
             ;
 
-paramList   : decl
-            | declAssign
-            | decl COMMA paramList
-            | declAssign COMMA paramList
+paramList   : typedDecl
+            | typedDecl COMMA paramList
             ;
 
 classDef    : CLASS IDENT LCURLY classDecls RCURLY

@@ -4,6 +4,7 @@ import com.keenant.myth.MythBaseVisitor;
 import com.keenant.myth.MythParser.DeclAssignContext;
 import com.keenant.myth.MythParser.DeclContext;
 import com.keenant.myth.MythParser.FuncDefContext;
+import com.keenant.myth.MythParser.TypedDeclContext;
 import com.keenant.myth.codegen.ClassName;
 import com.keenant.myth.codegen.Scope;
 import com.keenant.myth.lang.Params;
@@ -19,6 +20,18 @@ public class DeclVisitor extends MythBaseVisitor<DeclareStmt> {
 
     public DeclVisitor(Scope scope) {
         this.scope = scope;
+    }
+
+    @Override
+    public DeclareStmt visitTypedDecl(TypedDeclContext ctx) {
+        Decl
+        VarMode mode = ctx.varMode().accept(new TypeVisitor());
+        String name = ctx.IDENT().getSymbol().getText();
+        ClassName type = null;
+        if (ctx.className() != null) {
+            type = ctx.className().accept(new ClassNameVisitor());
+        }
+
     }
 
     @Override
