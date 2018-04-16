@@ -5,6 +5,8 @@ A programming language for the JVM.
 After my PL & Compilers class, I was inspired to create my own language, but one
 which would run on the JVM.
 
+Clone the generator branch to write your own `.myth` files.
+
 Here is what it looks like so far:
 
 ```javascript
