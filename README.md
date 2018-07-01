@@ -12,9 +12,17 @@ Here is all it does so far:
 ```dart
 class First {
   static def main(args: java.lang.String[]) {
-    var x : java.io.PrintStream
-    x = java.lang.System::out
-    x.println(5)
+    // declare variable to static field
+    var out = System::out
+
+    // make method calls on local variable
+    out.print(1)
+    out.print(2)
+    out.print(3)
+    out.println()
+
+    // static field with method call
+    System::out.println(0)
   }
 }
 ```
