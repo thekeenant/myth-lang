@@ -15,8 +15,13 @@
             <version>4.7</version>
         </dependency>
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-all</artifactId>
+            <artifactId>asm</artifactId>
             <version>5.2</version>
         </dependency>
         <dependency>
@@ -33,11 +38,20 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7</version>
+                <configuration>
+                  <libDirectory>${basedir}/src/main/antlr4/com/keenant/myth</libDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <id>antlr</id>
@@ -65,7 +79,7 @@
                 <version>1.4</version>
                 <executions>
                     <execution>
-                        <id>test</id>
+                        <id>add-source</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>

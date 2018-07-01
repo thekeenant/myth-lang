@@ -1,5 +1,7 @@
 class First {
-  var main = () {
-    var x : java.lang.Integer = 138;
-  };
- }
+  static def main(args: java.lang.String[]) {
+    var x : java.io.PrintStream
+    x = java.lang.System::out
+    x.println(5)
+  }
+}
