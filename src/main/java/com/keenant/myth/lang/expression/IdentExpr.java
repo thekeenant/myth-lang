@@ -1,5 +1,7 @@
 package com.keenant.myth.lang.expression;
 
+import com.keenant.myth.lang.ClassType;
+import com.keenant.myth.lang.MythType;
 import com.keenant.myth.lang.scope.Scope;
 import com.keenant.myth.lang.variable.LocalVariable;
 import lombok.ToString;
@@ -35,19 +37,15 @@ public class IdentExpr extends ReferenceExpr {
       if (identExists) {
         localVariable = scope.lookup(name, LocalVariable.class);
         type = localVariable.getType().resolveType();
+        return;
       }
     }
     else {
       owner.analyze(scope);
-
-      try {
-        Class<?> clazz = Class.forName(qualifiedName());
-        type = Type.getType(clazz);
-      }
-      catch (ClassNotFoundException e) {
-        // ignore
-      }
     }
+
+    ClassType classType = new ClassType(qualifiedName());
+    type = classType.resolveType();
   }
 
   @Override

@@ -17,7 +17,16 @@ public class ClassType extends NonArrayType {
       return Type.getType(Class.forName(name));
     }
     catch (ClassNotFoundException e) {
-      throw new IllegalStateException(e);
+
     }
+
+    try {
+      return Type.getType(Class.forName("java.lang." + name));
+    }
+    catch (ClassNotFoundException e) {
+
+    }
+
+    throw new IllegalArgumentException("Class not found: " + name);
   }
 }

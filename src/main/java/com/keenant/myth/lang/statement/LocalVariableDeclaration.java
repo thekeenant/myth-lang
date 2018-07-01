@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import lombok.ToString;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 @ToString
 public class LocalVariableDeclaration extends BlockStatement {
@@ -15,9 +16,10 @@ public class LocalVariableDeclaration extends BlockStatement {
   private final MythType type;
   private final Expression expr;
 
+  private Type resolvedType;
   private LocalVariable symbol;
 
-  public LocalVariableDeclaration(String name, MythType type, @Nullable Expression expr) {
+  public LocalVariableDeclaration(String name, @Nullable MythType type, @Nullable Expression expr) {
     this.name = name;
     this.type = type;
     this.expr = expr;
@@ -25,11 +27,18 @@ public class LocalVariableDeclaration extends BlockStatement {
 
   @Override
   public void analyze(LocalScope scope) {
-    symbol = scope.setLocal(name, type);
+    if (type == null && expr == null) {
+      throw new UnsupportedOperationException("Type or expression must be provided");
+    }
 
     if (expr != null) {
       expr.analyze(scope);
     }
+
+    resolvedType = type == null ? expr.getResolvedType() : type.resolveType();
+
+    symbol = scope.setLocal(name, new MythType(resolvedType));
+
   }
 
   @Override

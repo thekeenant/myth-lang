@@ -9,6 +9,7 @@ import com.keenant.myth.lang.expression.IdentExpr;
 import com.keenant.myth.lang.expression.MethodCallExpr;
 import com.keenant.myth.lang.expression.ReferenceExpr;
 import com.keenant.myth.lang.expression.StaticReferenceExpr;
+import java.util.Collections;
 import java.util.List;
 
 public class ExpressionVisitor extends MythBaseVisitor<Expression> {
@@ -36,7 +37,9 @@ public class ExpressionVisitor extends MythBaseVisitor<Expression> {
         }
         else if (ctx.methodCall() != null) {
           String name = ctx.methodCall().IDENT().getText();
-          List<Expression> args = ctx.methodCall().expressionList().accept(new ExpressionListVisitor());
+          List<Expression> args = ctx.methodCall().expressionList() == null ?
+              Collections.emptyList() :
+              ctx.methodCall().expressionList().accept(new ExpressionListVisitor());
           return new MethodCallExpr(name, args, expr1);
         }
       }

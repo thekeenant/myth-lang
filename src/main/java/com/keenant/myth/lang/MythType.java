@@ -8,12 +8,28 @@ public class MythType<T extends NonArrayType> {
   private final T type;
   private final int arrayDimensions;
 
+  private Type resolvedType;
+
   public MythType(T type, int arrayDimensions) {
     this.type = type;
     this.arrayDimensions = arrayDimensions;
   }
 
+  public MythType(Type resolvedType) {
+    this.type = null;
+    this.arrayDimensions = -1;
+    this.resolvedType = resolvedType;
+  }
+
   public Type resolveType() {
+    if (resolvedType != null) {
+      return resolvedType;
+    }
+
+    if (type == null) {
+      throw new IllegalStateException("Type cannot be null");
+    }
+
     Type childType = type.resolveType();
 
     // TODO: Make sure this works?
@@ -22,6 +38,7 @@ public class MythType<T extends NonArrayType> {
       result.insert(0, "[");
     }
 
-    return Type.getType(result.toString());
+    resolvedType = Type.getType(result.toString());
+    return resolvedType;
   }
 }

@@ -67,6 +67,7 @@ blockStatement
 
 localVariableDeclaration
   : VAR IDENT ':' type ('=' expression)?
+  | VAR IDENT '=' expression
   ;
 
 statement

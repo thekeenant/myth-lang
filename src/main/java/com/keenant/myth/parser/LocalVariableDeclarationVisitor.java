@@ -10,7 +10,7 @@ public class LocalVariableDeclarationVisitor extends MythBaseVisitor<LocalVariab
   @Override
   public LocalVariableDeclaration visitLocalVariableDeclaration(LocalVariableDeclarationContext ctx) {
     String name = ctx.IDENT().getText();
-    MythType type = ctx.type().accept(new TypeVisitor());
+    MythType type = ctx.type() == null ? null : ctx.type().accept(new TypeVisitor());
 
     Expression expr = ctx.expression() == null ? null : ctx.expression().accept(new ExpressionVisitor());
 
