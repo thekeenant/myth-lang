@@ -1,5 +1,6 @@
 package com.keenant.myth.lang.expression;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.Scope;
 import lombok.ToString;
 import org.objectweb.asm.MethodVisitor;
@@ -18,9 +19,9 @@ public class AssignmentExpr extends Expression {
   }
 
   @Override
-  public void analyze(Scope scope) {
-    lhs.analyze(scope);
-    rhs.analyze(scope);
+  public void analyze(Scope scope, CompileContext context) {
+    lhs.analyze(scope, context);
+    rhs.analyze(scope, context);
 
     if (!lhs.getResolvedType().equals(rhs.getResolvedType())) {
       throw new IllegalStateException("Assignment type mismatch: " + lhs.getResolvedType() + " != " + rhs.getResolvedType());

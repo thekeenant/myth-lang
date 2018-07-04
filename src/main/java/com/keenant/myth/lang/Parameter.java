@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.MethodScope;
 import com.keenant.myth.lang.variable.LocalVariable;
 import lombok.ToString;
@@ -18,9 +19,9 @@ public class Parameter {
     this.type = type;
   }
 
-  public void analyze(MethodScope scope) {
+  public void analyze(MethodScope scope, CompileContext context) {
     symbol = scope.setLocal(name, type);
-    resolvedType = type.resolveType();
+    resolvedType = type.resolveType(context);
   }
 
   public Type getResolvedType() {

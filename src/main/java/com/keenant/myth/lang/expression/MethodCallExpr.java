@@ -1,5 +1,7 @@
 package com.keenant.myth.lang.expression;
 
+import com.keenant.myth.CompileContext;
+import com.keenant.myth.lang.ClassType;
 import com.keenant.myth.lang.scope.Scope;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -16,7 +18,8 @@ public class MethodCallExpr extends Expression {
   private final List<Expression> args;
   private final Expression owner;
 
-  private Method javaMethod;
+  private ConstructorCallExpr constructorCall;
+
   private Type methodType;
   private Type returnType;
 
@@ -27,43 +30,68 @@ public class MethodCallExpr extends Expression {
   }
 
   @Override
-  public void analyze(Scope scope) {
-    owner.analyze(scope);
-    args.forEach(arg -> arg.analyze(scope));
-
-    List<Type> argTypes = args.stream()
-        .map(Expression::getResolvedType)
-        .collect(Collectors.toList());
-
-    Type ownerType = owner.getResolvedType();
-
+  public void analyze(Scope scope, CompileContext context) {
+    // try as a constructor first
     try {
-      Class<?> clazz = Class.forName(ownerType.getClassName());
+      IdentExpr test = new IdentExpr(name, owner);
+      test.analyze(scope, context);
+      test.getResolvedType();
+
+      constructorCall = new ConstructorCallExpr(new ClassType(test.qualifiedName()), args);
+      constructorCall.analyze(scope, context);
+      return;
+    } catch (Exception e) {
+      // ignore error, we try method call
+    }
+
+    if (owner == null) {
+      throw new UnsupportedOperationException("Not found: " + name);
+    }
+    else {
+      owner.analyze(scope, context);
+      args.forEach(arg -> arg.analyze(scope, context));
+
+      List<Type> argTypes = args.stream()
+          .map(Expression::getResolvedType)
+          .collect(Collectors.toList());
+
+      Type ownerType = owner.getResolvedType();
+      Class<?> clazz;
+      try {
+        clazz = Class.forName(ownerType.getClassName());
+      }
+      catch (ClassNotFoundException e) {
+        throw new IllegalStateException(e);
+      }
       for (Method method : clazz.getDeclaredMethods()) {
         if (method.getName().equals(name)) {
           List<Type> paramTypes = Arrays.asList(Type.getArgumentTypes(method));
 
           if (argTypes.equals(paramTypes)) {
-            javaMethod = method;
             methodType = Type.getType(method);
             returnType = Type.getType(method.getReturnType());
-            break;
+            return;
           }
         }
       }
-    }
-    catch (ClassNotFoundException e) {
-      throw new UnsupportedOperationException(e);
     }
   }
 
   @Override
   public Type getResolvedType() {
+    if (constructorCall != null) {
+      return constructorCall.getResolvedType();
+    }
     return returnType;
   }
 
   @Override
   public void codegen(MethodVisitor mv) {
+    if (constructorCall != null) {
+      constructorCall.codegen(mv);
+      return;
+    }
+
     owner.codegen(mv);
     args.forEach(expr -> expr.codegen(mv));
 

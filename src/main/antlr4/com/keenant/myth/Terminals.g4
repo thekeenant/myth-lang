@@ -1,7 +1,8 @@
 lexer grammar Terminals;
 
+
 // Primitives
-BOOL        : 'bool';
+BOOL        : 'boolean';
 CHAR        : 'char';
 BYTE        : 'byte';
 SHORT       : 'short';
@@ -43,11 +44,9 @@ BRACKETS    : '[]';
 
 
 // Identifiers start with a character, may have digits
-
 IDENT       : [a-zA-Z][_a-zA-Z0-9]*;
 
 // Basics
-DIGIT       : [0-9]+;
-COMMENT     : '//'~[\r\n]* -> skip;
-BLOCK_COM   : '/*'.*?'*/' -> skip;
-WS          : [ \t\r\n]+ -> channel(HIDDEN);
+DIGIT       : [0-9];
+STRING      : '"' ('\\"' | ~('"'))* '"';
+WS          : [ \t\r\n] -> channel(HIDDEN);

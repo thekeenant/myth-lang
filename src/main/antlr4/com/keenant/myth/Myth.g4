@@ -1,12 +1,12 @@
 grammar Myth;
-import Literals, Terminals;
+import Terminals;
 
 compilationUnit
   : importDeclaration* classDeclaration EOF
   ;
 
 importDeclaration
-  : IMPORT qualifiedName
+  : IMPORT qualifiedName ('.' wildcard='*')?
   ;
 
 qualifiedName
@@ -57,7 +57,7 @@ classType
   ;
 
 block
-  : '{' blockStatement* '}'
+  : '{' (blockStatement ';'?)* '}'
   ;
 
 blockStatement
@@ -72,11 +72,14 @@ localVariableDeclaration
 
 statement
   : statementExpression=expression
+  | codeBlock=block
+  | ifStatement='if' '(' expression ')' thenStatement=statement ('else' elseStatement=statement)?
   ;
 
 expression
   : expression bop=('.' | '::') (IDENT | methodCall)
   | methodCall
+  | constructorCall
   | literal
   | IDENT
   | <assoc=right> expression
@@ -88,6 +91,39 @@ methodCall
   : IDENT '(' expressionList? ')'
   ;
 
+constructorCall
+  : 'new' classType '(' expressionList? ')'
+  ;
+
 expressionList
   : expression (',' expression)*
+  ;
+
+
+literal
+  : booleanLiteral
+  | integerLiteral
+  | doubleLiteral
+  | floatLiteral
+  | stringLiteral
+  ;
+
+integerLiteral
+  : DIGIT+
+  ;
+
+doubleLiteral
+  : before=DIGIT* '.' after=DIGIT+
+  ;
+
+floatLiteral
+  : before=DIGIT* ('.' after=DIGIT+)? ('f' | 'F')
+  ;
+
+booleanLiteral
+  : ('true' | 'false')
+  ;
+
+stringLiteral
+  : STRING
   ;

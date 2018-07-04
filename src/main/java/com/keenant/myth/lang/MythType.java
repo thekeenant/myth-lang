@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import lombok.ToString;
 import org.objectweb.asm.Type;
 
@@ -21,7 +22,15 @@ public class MythType<T extends NonArrayType> {
     this.resolvedType = resolvedType;
   }
 
-  public Type resolveType() {
+  public static MythType<ClassType> forClassName(String className) {
+    return new MythType<>(new ClassType(className), 0);
+  }
+
+  public String getClassName() {
+    return type == null ? resolvedType.getClassName() : type.getClassName();
+  }
+
+  public Type resolveType(CompileContext context) {
     if (resolvedType != null) {
       return resolvedType;
     }
@@ -30,7 +39,7 @@ public class MythType<T extends NonArrayType> {
       throw new IllegalStateException("Type cannot be null");
     }
 
-    Type childType = type.resolveType();
+    Type childType = type.resolveType(context);
 
     // TODO: Make sure this works?
     StringBuilder result = new StringBuilder(childType.getDescriptor());

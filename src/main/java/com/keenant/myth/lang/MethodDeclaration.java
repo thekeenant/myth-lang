@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.MethodScope;
 import com.keenant.myth.lang.variable.MethodSymbol;
 import java.util.stream.Collectors;
@@ -30,19 +31,19 @@ public class MethodDeclaration extends MemberDeclaration {
   }
 
   @Override
-  public void analyze(ClassDeclaration context) {
-    context.getScope().set(name, new MethodSymbol(this));
-    scope = new MethodScope(context.getScope(), this);
+  public void analyze(ClassDeclaration classDeclaration, CompileContext context) {
+    classDeclaration.getScope().set(name, new MethodSymbol(this));
+    scope = new MethodScope(classDeclaration.getScope(), this);
 
     if (returnType == null) {
       resolvedReturnType = Type.VOID_TYPE;
     }
     else {
-      resolvedReturnType = returnType.resolveType();
+      resolvedReturnType = returnType.resolveType(context);
     }
 
-    params.analyze(scope);
-    block.analyze(scope);
+    params.analyze(scope, context);
+    block.analyze(scope, context);
   }
 
   private int access() {

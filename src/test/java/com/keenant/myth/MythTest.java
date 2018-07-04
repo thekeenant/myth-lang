@@ -21,10 +21,12 @@ public class MythTest {
 
     CompilationUnit unit = parser.compilationUnit().accept(new CompilationUnitVisitor());
 
+    System.out.println("Before: " + unit);
+
     unit.analyze();
     byte[] output = unit.codegen();
 
-    System.out.println(unit);
+    System.out.println("After:  " + unit);
 
     out.write(output);
     out.flush();

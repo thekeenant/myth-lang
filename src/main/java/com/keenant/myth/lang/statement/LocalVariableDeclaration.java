@@ -1,9 +1,12 @@
 package com.keenant.myth.lang.statement;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.expression.Expression;
 import com.keenant.myth.lang.MythType;
 import com.keenant.myth.lang.scope.LocalScope;
 import com.keenant.myth.lang.variable.LocalVariable;
+import com.keenant.myth.util.Bytecode;
+import com.keenant.myth.util.TypeOpcodes;
 import javax.annotation.Nullable;
 import lombok.ToString;
 import org.objectweb.asm.MethodVisitor;
@@ -26,16 +29,16 @@ public class LocalVariableDeclaration extends BlockStatement {
   }
 
   @Override
-  public void analyze(LocalScope scope) {
+  public void analyze(LocalScope scope, CompileContext context) {
     if (type == null && expr == null) {
       throw new UnsupportedOperationException("Type or expression must be provided");
     }
 
     if (expr != null) {
-      expr.analyze(scope);
+      expr.analyze(scope, context);
     }
 
-    resolvedType = type == null ? expr.getResolvedType() : type.resolveType();
+    resolvedType = type == null ? expr.getResolvedType() : type.resolveType(context);
 
     symbol = scope.setLocal(name, new MythType(resolvedType));
 
@@ -48,9 +51,10 @@ public class LocalVariableDeclaration extends BlockStatement {
 
       expr.codegen(mv);
 
-      // TODO: There are other types...
+      TypeOpcodes opcodes = Bytecode.getTypeOpcodes(resolvedType);
+
       mv.visitVarInsn(
-          Opcodes.ASTORE,
+          opcodes.store,
           index
       );
     }

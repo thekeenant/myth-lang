@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import java.util.List;
 import lombok.ToString;
 
@@ -14,7 +15,10 @@ public class CompilationUnit {
   }
 
   public void analyze() {
-    classDeclaration.analyze();
+    CompileContext context = new CompileContext();
+
+    imports.forEach(i -> i.analyze(context));
+    classDeclaration.analyze(context);
   }
 
   public byte[] codegen() {

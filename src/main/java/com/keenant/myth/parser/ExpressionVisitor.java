@@ -1,9 +1,11 @@
 package com.keenant.myth.parser;
 
 import com.keenant.myth.MythBaseVisitor;
+import com.keenant.myth.MythParser.ConstructorCallContext;
 import com.keenant.myth.MythParser.ExpressionContext;
-import com.keenant.myth.MythParser.MethodCallContext;
+import com.keenant.myth.lang.ClassType;
 import com.keenant.myth.lang.expression.AssignmentExpr;
+import com.keenant.myth.lang.expression.ConstructorCallExpr;
 import com.keenant.myth.lang.expression.Expression;
 import com.keenant.myth.lang.expression.IdentExpr;
 import com.keenant.myth.lang.expression.MethodCallExpr;
@@ -53,15 +55,27 @@ public class ExpressionVisitor extends MythBaseVisitor<Expression> {
         }
       }
     }
+    else if (ctx.constructorCall() != null) {
+      ConstructorCallContext childCtx = ctx.constructorCall();
+
+      ClassType type = childCtx.classType().accept(new ClassTypeVisitor());
+      List<Expression> args = childCtx.expressionList() == null ?
+          Collections.emptyList() :
+          childCtx.expressionList().accept(new ExpressionListVisitor());
+
+      return new ConstructorCallExpr(type, args);
+    }
+    else if (ctx.methodCall() != null) {
+      String name = ctx.methodCall().IDENT().getText();
+      List<Expression> args = ctx.methodCall().expressionList() == null ?
+          Collections.emptyList() :
+          ctx.methodCall().expressionList().accept(new ExpressionListVisitor());
+      return new MethodCallExpr(name, args, null);
+    }
     else if (ctx.IDENT() != null) {
       return new IdentExpr(ctx.IDENT().getText(), null);
     }
 
     throw new UnsupportedOperationException("Unknown expression: " + ctx.getText());
-  }
-
-  @Override
-  public Expression visitMethodCall(MethodCallContext ctx) {
-    return super.visitMethodCall(ctx);
   }
 }

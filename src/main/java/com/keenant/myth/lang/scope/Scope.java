@@ -32,7 +32,7 @@ public class Scope {
 
     // keep looking at parents until we find one
     while (curr != null) {
-      Symbol result = table.get(name);
+      Symbol result = curr.table.get(name);
 
       if (result != null) {
         if (forceType.isInstance(result)) {

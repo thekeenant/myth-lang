@@ -7,23 +7,24 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
 @ToString
-public class IntLiteralExpr extends LiteralExpr {
-  private final String valueStr;
+public class StringLiteralExpr extends LiteralExpr {
+  private static final Type TYPE = Type.getType(String.class);
 
-  private int value;
+  private String value;
 
-  public IntLiteralExpr(String valueStr) {
-    this.valueStr = valueStr;
+  public StringLiteralExpr(String value) {
+    this.value = value;
   }
 
   @Override
   public void analyze(Scope scope, CompileContext context) {
-    value = Integer.parseInt(valueStr);
+    value = value.replace("\\\"", "\"");
+    // nothing to do
   }
 
   @Override
   public Type getResolvedType() {
-    return Type.INT_TYPE;
+    return TYPE;
   }
 
   @Override

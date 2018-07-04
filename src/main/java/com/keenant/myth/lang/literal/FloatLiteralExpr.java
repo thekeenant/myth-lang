@@ -2,28 +2,26 @@ package com.keenant.myth.lang.literal;
 
 import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.Scope;
-import lombok.ToString;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-@ToString
-public class IntLiteralExpr extends LiteralExpr {
+public class FloatLiteralExpr extends LiteralExpr {
   private final String valueStr;
 
-  private int value;
+  private float value;
 
-  public IntLiteralExpr(String valueStr) {
+  public FloatLiteralExpr(String valueStr) {
     this.valueStr = valueStr;
   }
 
   @Override
   public void analyze(Scope scope, CompileContext context) {
-    value = Integer.parseInt(valueStr);
+    value = Float.valueOf(valueStr);
   }
 
   @Override
   public Type getResolvedType() {
-    return Type.INT_TYPE;
+    return Type.FLOAT_TYPE;
   }
 
   @Override

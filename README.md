@@ -11,7 +11,7 @@ Here is all it does so far:
 
 ```dart
 class First {
-  static def main(args: java.lang.String[]) {
+  static def main(args: String[]) {
     // declare variable to static field
     var out = System::out
 

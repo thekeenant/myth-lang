@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import lombok.ToString;
 import org.objectweb.asm.Type;
 
@@ -12,7 +13,12 @@ public class PrimitiveType extends NonArrayType {
   }
 
   @Override
-  public Type resolveType() {
+  public Type resolveType(CompileContext context) {
     return type;
+  }
+
+  @Override
+  public String getClassName() {
+    return type.getClassName();
   }
 }

@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.ClassScope;
 import java.util.List;
 import lombok.ToString;
@@ -24,11 +25,11 @@ public class ClassDeclaration {
     return scope;
   }
 
-  public void analyze() {
+  public void analyze(CompileContext context) {
     scope = new ClassScope(null);
 
     for (MemberDeclaration decl : declarations) {
-      decl.analyze(this);
+      decl.analyze(this, context);
     }
   }
 

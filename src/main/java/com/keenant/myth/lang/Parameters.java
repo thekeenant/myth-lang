@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.MethodScope;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ public class Parameters {
         .collect(Collectors.toList());
   }
 
-  public void analyze(MethodScope scope) {
-    list.forEach(param -> param.analyze(scope));
+  public void analyze(MethodScope scope, CompileContext context) {
+    list.forEach(param -> param.analyze(scope, context));
   }
 }

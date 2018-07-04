@@ -1,5 +1,6 @@
 package com.keenant.myth.lang.expression;
 
+import com.keenant.myth.CompileContext;
 import com.keenant.myth.lang.scope.Scope;
 import java.lang.reflect.Field;
 import lombok.ToString;
@@ -20,8 +21,8 @@ public class StaticReferenceExpr extends ReferenceExpr {
   }
 
   @Override
-  public void analyze(Scope scope) {
-    owner.analyze(scope);
+  public void analyze(Scope scope, CompileContext context) {
+    owner.analyze(scope, context);
 
     Type ownerType = owner.getResolvedType();
 

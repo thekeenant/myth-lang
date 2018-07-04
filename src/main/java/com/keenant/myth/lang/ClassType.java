@@ -1,5 +1,6 @@
 package com.keenant.myth.lang;
 
+import com.keenant.myth.CompileContext;
 import lombok.ToString;
 import org.objectweb.asm.Type;
 
@@ -12,21 +13,12 @@ public class ClassType extends NonArrayType {
   }
 
   @Override
-  public Type resolveType() {
-    try {
-      return Type.getType(Class.forName(name));
-    }
-    catch (ClassNotFoundException e) {
+  public Type resolveType(CompileContext context) {
+    return context.lookupType(name);
+  }
 
-    }
-
-    try {
-      return Type.getType(Class.forName("java.lang." + name));
-    }
-    catch (ClassNotFoundException e) {
-
-    }
-
-    throw new IllegalArgumentException("Class not found: " + name);
+  @Override
+  public String getClassName() {
+    return name;
   }
 }

@@ -1,26 +1,27 @@
 package com.keenant.myth.lang.statement;
 
 import com.keenant.myth.CompileContext;
-import com.keenant.myth.lang.expression.Expression;
+import com.keenant.myth.lang.Block;
 import com.keenant.myth.lang.scope.LocalScope;
 import lombok.ToString;
 import org.objectweb.asm.MethodVisitor;
 
 @ToString
-public class ExpressionStatement extends Statement {
-  private final Expression expr;
+public class CodeBlockStatement extends Statement {
+  private final Block block;
 
-  public ExpressionStatement(Expression expr) {
-    this.expr = expr;
+  public CodeBlockStatement(Block block) {
+    this.block = block;
   }
 
   @Override
   public void analyze(LocalScope scope, CompileContext context) {
-    expr.analyze(scope, context);
+    LocalScope nested = new LocalScope(scope);
+    block.analyze(nested, context);
   }
 
   @Override
   public void codegen(MethodVisitor mv) {
-    expr.codegen(mv);
+    block.codegen(mv);
   }
 }
