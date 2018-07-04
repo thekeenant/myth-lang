@@ -10,19 +10,20 @@ Clone the generator branch to write your own `.myth` files.
 Here is all it does so far:
 
 ```dart
+import java.util.*
+
 class First {
   static def main(args: String[]) {
-    // declare variable to static field
-    var out = System::out
+    System::out.print("Type away: ")
+    var scanner = Scanner(System::in)
+    var bool = scanner.nextBoolean()
 
-    // make method calls on local variable
-    out.print(1)
-    out.print(2)
-    out.print(3)
-    out.println()
-
-    // static field with method call
-    System::out.println(0)
+    if (bool) {
+      System::out.println("You said true!")
+    }
+    else {
+      System::out.println("You said false :(")
+    }
   }
 }
 ```
