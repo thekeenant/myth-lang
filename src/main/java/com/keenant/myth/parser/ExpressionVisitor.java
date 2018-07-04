@@ -4,7 +4,11 @@ import com.keenant.myth.MythBaseVisitor;
 import com.keenant.myth.MythParser.ConstructorCallContext;
 import com.keenant.myth.MythParser.ExpressionContext;
 import com.keenant.myth.lang.ClassType;
+import com.keenant.myth.lang.expression.ArithmeticExpr;
+import com.keenant.myth.lang.expression.ArithmeticExpr.MathOperator;
 import com.keenant.myth.lang.expression.AssignmentExpr;
+import com.keenant.myth.lang.expression.ComparisonExpr;
+import com.keenant.myth.lang.expression.ComparisonExpr.ComparisonOperator;
 import com.keenant.myth.lang.expression.ConstructorCallExpr;
 import com.keenant.myth.lang.expression.Expression;
 import com.keenant.myth.lang.expression.IdentExpr;
@@ -47,7 +51,37 @@ public class ExpressionVisitor extends MythBaseVisitor<Expression> {
       }
       else {
         Expression expr2 = ctx.expression(1).accept(this);
-        if (bop.equals("=")) {
+        if (bop.equals("+")) {
+          return new ArithmeticExpr(expr1, expr2, MathOperator.ADD);
+        }
+        else if (bop.equals("-")) {
+          return new ArithmeticExpr(expr1, expr2, MathOperator.SUB);
+        }
+        else if (bop.equals("*")) {
+          return new ArithmeticExpr(expr1, expr2, MathOperator.MUL);
+        }
+        else if (bop.equals("/")) {
+          return new ArithmeticExpr(expr1, expr2, MathOperator.DIV);
+        }
+        else if (bop.equals("<=")) {
+          return new ComparisonExpr(expr1, expr2, ComparisonOperator.LEQ);
+        }
+        else if (bop.equals("<")) {
+          return new ComparisonExpr(expr1, expr2, ComparisonOperator.LESS);
+        }
+        else if (bop.equals(">=")) {
+          return new ComparisonExpr(expr1, expr2, ComparisonOperator.GEQ);
+        }
+        else if (bop.equals(">")) {
+          return new ComparisonExpr(expr1, expr2, ComparisonOperator.GREATER);
+        }
+        else if (bop.equals("!=")) {
+          return new ComparisonExpr(expr1, expr2, ComparisonOperator.NEQ);
+        }
+        else if (bop.equals("==")) {
+          return new ComparisonExpr(expr1, expr2, ComparisonOperator.EQUAL);
+        }
+        else if (bop.equals("=")) {
           if (!(expr1 instanceof ReferenceExpr)) {
             throw new UnsupportedOperationException("Left side of assignment must be reference: " + expr1);
           }

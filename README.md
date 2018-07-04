@@ -10,20 +10,28 @@ Clone the generator branch to write your own `.myth` files.
 Here is all it does so far:
 
 ```javascript
+// imports
 import java.util.*
 
+// public class
 class First {
+  // static method
   static def main(args: String[]) {
-    System::out.print("Type away: ")
-    var scanner = Scanner(System::in)
-    var bool = scanner.nextBoolean()
+    var scanner = Scanner(System::in) // construct scanner
 
-    if (bool) {
-      System::out.println("You said true!")
-    }
-    else {
-      System::out.println("You said false :(")
-    }
+    System::out.print("x: ") // print
+    var x = scanner.nextInt() // method call
+
+    System::out.print("y: ")
+    var y = scanner.nextInt()
+
+    System::out.print(x)
+    System::out.print(" vs ")
+    System::out.println(y)
+
+    // branching
+    if (x > y) System::out.println("TRUE")
+    else System::out.println("FALSE")
   }
 }
 ```

@@ -82,6 +82,10 @@ expression
   | constructorCall
   | literal
   | IDENT
+  | expression bop=('+' | '-') expression
+  | expression bop=('*' | '/') expression
+  | expression bop=('<=' | '>=' | '>' | '<') expression
+  | expression bop=('==' | '!=') expression
   | <assoc=right> expression
     bop=('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=')
     expression
