@@ -9,7 +9,7 @@ Clone the generator branch to write your own `.myth` files.
 
 Here is all it does so far:
 
-```dart
+```javascript
 import java.util.*
 
 class First {
